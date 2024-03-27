@@ -211,6 +211,7 @@ class RosbagIO {
 
     /// IMU
     RosbagIO &AddImuHandle(ImuHandle f);
+    RosbagIO &AddImuHandle(const std::string& IMUTopicName,RosbagIO::ImuHandle f);
 
     /// 清除现有的处理函数
     void CleanProcessFunc() { process_func_.clear(); }

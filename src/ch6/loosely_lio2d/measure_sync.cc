@@ -4,7 +4,7 @@
 #include "measure_sync.h"
 
 namespace sad {
-
+// MessageSync类的Sync方法
 bool MessageSync::Sync() {
     // 如果激光雷达或IMU的缓冲区为空，则返回false
     if (lidar_buffer_.empty() || imu_buffer_.empty()) {
@@ -18,7 +18,7 @@ bool MessageSync::Sync() {
         measures_.lidar_begin_time_ = time_buffer_.front();
 
         // 计算激光雷达数据的结束时间
-        lidar_end_time_ = measures_.lidar_begin_time_ + measures_.lidar_->points.back().time / double(1000);
+        lidar_end_time_ = measures_.lidar_begin_time_ + measures_.lidar_->scan_time;
 
         // 设置激光雷达数据的结束时间，并标记激光雷达数据已经被推送
         measures_.lidar_end_time_ = lidar_end_time_;
@@ -59,7 +59,4 @@ bool MessageSync::Sync() {
     return true;
 }
 
-// MessageSync类的Init方法，用于从YAML文件中加载配置
-void MessageSync::Init(const std::string& yaml) { conv_->LoadFromYAML(yaml); }
-
-}  // namespace sad
+}

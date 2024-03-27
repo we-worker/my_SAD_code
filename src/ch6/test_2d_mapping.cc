@@ -9,7 +9,7 @@
 #include "ch6/mapping_2d.h"
 #include "common/io_utils.h"
 
-DEFINE_string(bag_path, "./dataset/sad/2dmapping/floor1.bag", "数据包路径");
+DEFINE_string(bag_path, "./dataset/sad/2dmapping/31.bag", "数据包路径");
 DEFINE_bool(with_loop_closing, false, "是否使用回环检测");
 
 /// 测试2D lidar SLAM
@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
         return -1;
     }
 
-    rosbag_io.AddScan2DHandle("/pavo_scan_bottom", [&](Scan2d::Ptr scan) { return mapping.ProcessScan(scan); }).Go();
+    rosbag_io.AddScan2DHandle("/scan", [&](Scan2d::Ptr scan) { return mapping.ProcessScan(scan); }).Go();
     cv::imwrite("./data/ch6/global_map.png", mapping.ShowGlobalMap(2000));
     return 0;
 }

@@ -78,8 +78,12 @@ void OccupancyMap::AddLidarFrame(std::shared_ptr<Frame> frame, GridMethod method
     
     // 此处不能直接使用frame->pose_submap_，因为frame可能来自上一个地图
     // 此时frame->pose_submap_还未更新，依旧是frame在上一个地图中的pose
-    SE2 pose_in_submap = pose_.inverse() * frame->pose_;
-    float theta = pose_in_submap.so2().log();
+   // pose_：Tws， submap -> world 子地图与世界系之间的位姿
+    // pose_.inverse()：Tsw  world -> submap
+    // frame->pose_：Twc，current_frame -> world  每个扫描数据的世界坐标与世界坐标系之间的位姿
+    // Tsc = Tws.inv() * Twc = Tsw * Twc  当前激光扫描与子地图之间的位姿关系
+    SE2 pose_in_submap = pose_.inverse() * frame->pose_;    // 公式（6.23）Twc = Tws * Tsc
+    float theta = pose_in_submap.so2().log(); // 当前帧scan在子地图中位姿对应的角度
     has_outside_pts_ = false;
 
     // 先计算末端点所在的网格
@@ -93,7 +97,7 @@ void OccupancyMap::AddLidarFrame(std::shared_ptr<Frame> frame, GridMethod method
         double real_angle = scan->angle_min + i * scan->angle_increment;
         double x = scan->ranges[i] * std::cos(real_angle);
         double y = scan->ranges[i] * std::sin(real_angle);
-
+        // Pwc * pc，激光扫描数据转换到世界系下，最后转换为像素坐标系
         endpoints.emplace(World2Image(frame->pose_ * Vec2d(x, y)));
     }
 

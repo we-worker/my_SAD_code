@@ -8,7 +8,8 @@
 #include "ch6/lidar_2d_utils.h"
 #include "common/io_utils.h"
 
-DEFINE_string(bag_path, "./dataset/sad/2dmapping/test_2d_lidar.bag", "数据包路径");
+// DEFINE_string(bag_path, "./dataset/sad/2dmapping/test_2d_lidar.bag", "数据包路径");
+DEFINE_string(bag_path, "/home/arc/works/robot_2024/carto_ws/2024-03-16-14-04-11.bag", "数据包路径");
 
 /// 测试从rosbag中读取2d scan并plot的结果
 
@@ -20,7 +21,7 @@ int main(int argc, char** argv) {
 
     sad::RosbagIO rosbag_io(fLS::FLAGS_bag_path);
     rosbag_io
-        .AddScan2DHandle("/pavo_scan_bottom",
+        .AddScan2DHandle("/LiDAR/LD06",
                          [](Scan2d::Ptr scan) {
                              cv::Mat image;
                              sad::Visualize2DScan(scan, SE2(), image, Vec3b(255, 0, 0));

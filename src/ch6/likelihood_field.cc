@@ -96,7 +96,11 @@ bool LikelihoodField::AlignGaussNewton(SE2& init_pose) {
                 // 图像梯度
                 float dx = 0.5 * (field_.at<float>(pf[1], pf[0] + 1) - field_.at<float>(pf[1], pf[0] - 1));
                 float dy = 0.5 * (field_.at<float>(pf[1] + 1, pf[0]) - field_.at<float>(pf[1] - 1, pf[0]));
-
+                // 图像梯度（双三次插值,代码还没写 bicubic interpolation）
+                // float dx = 0.5 * (math::GetPixelValue_bicubic<float>(field_, pf[0] + 1, pf[1]) 
+                //                 - math::GetPixelValue_bicubic<float>(field_, pf[0] - 1, pf[1]));
+                // float dy = 0.5 * (math::GetPixelValue_bicubic<float>(field_, pf[0], pf[1] + 1) 
+                //                 - math::GetPixelValue_bicubic<float>(field_, pf[0], pf[1] - 1));
                 Vec3d J;
                 J << resolution_ * dx, resolution_ * dy,
                     -resolution_ * dx * r * std::sin(angle + theta) + resolution_ * dy * r * std::cos(angle + theta);
@@ -150,7 +154,7 @@ cv::Mat LikelihoodField::GetFieldImage() {
 }
 
 bool LikelihoodField::AlignG2O(SE2& init_pose) {
-    using BlockSolverType = g2o::BlockSolver<g2o::BlockSolverTraits<3, 1>>;
+    using BlockSolverType = g2o::BlockSolver<g2o::BlockSolverTraits<3, 1>>;//优化目标参数3行1列
     using LinearSolverType = g2o::LinearSolverCholmod<BlockSolverType::PoseMatrixType>;
     auto* solver = new g2o::OptimizationAlgorithmLevenberg(
         g2o::make_unique<BlockSolverType>(g2o::make_unique<LinearSolverType>()));

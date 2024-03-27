@@ -9,7 +9,8 @@
 #include "ch6/likelihood_filed.h"
 #include "common/io_utils.h"
 
-DEFINE_string(bag_path, "./dataset/sad/2dmapping/floor1.bag", "数据包路径");
+// DEFINE_string(bag_path, "./dataset/sad/2dmapping/floor1.bag", "数据包路径");
+DEFINE_string(bag_path, "/home/arc/works/robot_2024/carto_ws/2024-03-16-14-04-11.bag", "数据包路径");
 DEFINE_string(method, "gauss-newton", "gauss-newton/g2o");
 
 /// 测试2D似然场法的ICP
@@ -26,7 +27,7 @@ int main(int argc, char** argv) {
     /// 我们将上一个scan与当前scan进行配准
     rosbag_io
         .AddScan2DHandle(
-            "/pavo_scan_bottom",
+            "/LiDAR/LD06",
             [&](Scan2d::Ptr scan) {
                 sad::LikelihoodField lf;
                 current_scan = scan;

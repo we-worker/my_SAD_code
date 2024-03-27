@@ -37,6 +37,8 @@ class Icp2d {
     /// 使用高斯牛顿法进行配准, Point-to-Plane
     bool AlignGaussNewtonPoint2Plane(SE2& init_pose);
 
+    bool AlignG2O(SE2& init_pose);
+
    private:
     // 建立目标点云的Kdtree
     void BuildTargetKdTree();
@@ -46,6 +48,9 @@ class Icp2d {
 
     Scan2d::Ptr target_scan_ = nullptr;
     Scan2d::Ptr source_scan_ = nullptr;
+
+        // PCL版本的KD树实现2D点的最近邻搜索
+    pcl::search::KdTree<Point2d>::Ptr kdtree_2d; 
 };
 
 }  // namespace sad

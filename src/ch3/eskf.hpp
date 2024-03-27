@@ -156,7 +156,7 @@ class ESKF {
         gnss_noise_.diagonal() << gp2, gp2, gh2, ga2, ga2, ga2;
     }
 
-    /// 更新名义状态变量，重置error state
+    /// 更新名义状态变量，重置error state  (3.55)
     void UpdateAndReset() {
         p_ += dx_.template block<3, 1>(0, 0);
         v_ += dx_.template block<3, 1>(3, 0);
@@ -317,7 +317,7 @@ bool ESKF<S>::ObserveSE3(const SE3& pose, double trans_noise, double ang_noise) 
     noise_vec << trans_noise, trans_noise, trans_noise, ang_noise, ang_noise, ang_noise;
 
     Mat6d V = noise_vec.asDiagonal();
-    Eigen::Matrix<S, 18, 6> K = cov_ * H.transpose() * (H * cov_ * H.transpose() + V).inverse();
+    Eigen::Matrix<S, 18, 6> K = cov_ * H.transpose() * (H * cov_ * H.transpose() + V).inverse(); //(3.51 a)
 
     // 更新x和cov
     Vec6d innov = Vec6d::Zero();
@@ -325,7 +325,7 @@ bool ESKF<S>::ObserveSE3(const SE3& pose, double trans_noise, double ang_noise) 
     innov.template tail<3>() = (R_.inverse() * pose.so3()).log();  // 旋转部分(3.67)
 
     dx_ = K * innov;
-    cov_ = (Mat18T::Identity() - K * H) * cov_;
+    cov_ = (Mat18T::Identity() - K * H) * cov_; //(3.51 d)
 
     UpdateAndReset();
     return true;

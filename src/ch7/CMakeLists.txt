@@ -20,38 +20,38 @@ target_link_libraries(${PROJECT_NAME}.ch7
         ${third_party_libs}
         )
 
-add_executable(test_icp
-        test/test_icp.cc
-        )
+# add_executable(test_icp
+#         test/test_icp.cc
+#         )
 
-target_link_libraries(test_icp
-        ${PROJECT_NAME}.ch5
-        ${PROJECT_NAME}.ch7
-        ${PROJECT_NAME}.common
-        ${third_party_libs}
-        )
+# target_link_libraries(test_icp
+#         ${PROJECT_NAME}.ch5
+#         ${PROJECT_NAME}.ch7
+#         ${PROJECT_NAME}.common
+#         ${third_party_libs}
+#         )
 
-add_executable(test_ndt_lo
-        test/test_ndt_lo.cc
-        )
+# add_executable(test_ndt_lo
+#         test/test_ndt_lo.cc
+#         )
 
-target_link_libraries(test_ndt_lo
-        ${PROJECT_NAME}.ch5
-        ${PROJECT_NAME}.ch7
-        ${PROJECT_NAME}.common
-        ${third_party_libs}
-        )
+# target_link_libraries(test_ndt_lo
+#         ${PROJECT_NAME}.ch5
+#         ${PROJECT_NAME}.ch7
+#         ${PROJECT_NAME}.common
+#         ${third_party_libs}
+#         )
 
-add_executable(test_inc_ndt_lo
-        test/test_inc_ndt_lo.cc
-        )
+# add_executable(test_inc_ndt_lo
+#         test/test_inc_ndt_lo.cc
+#         )
 
-target_link_libraries(test_inc_ndt_lo
-        ${PROJECT_NAME}.ch5
-        ${PROJECT_NAME}.ch7
-        ${PROJECT_NAME}.common
-        ${third_party_libs}
-        )
+# target_link_libraries(test_inc_ndt_lo
+#         ${PROJECT_NAME}.ch5
+#         ${PROJECT_NAME}.ch7
+#         ${PROJECT_NAME}.common
+#         ${third_party_libs}
+#         )
 
 add_executable(test_feature_extraction
         test/test_feature_extraction.cc
@@ -75,24 +75,24 @@ target_link_libraries(test_loam_odom
         ${third_party_libs}
         )
 
-add_executable(test_loosely_lio
-        test/test_loosely_lio.cc
-        )
+# add_executable(test_loosely_lio
+#         test/test_loosely_lio.cc
+#         )
 
-target_link_libraries(test_loosely_lio
-        ${PROJECT_NAME}.ch5
-        ${PROJECT_NAME}.ch7
-        ${PROJECT_NAME}.common
-        ${third_party_libs}
-        )
+# target_link_libraries(test_loosely_lio
+#         ${PROJECT_NAME}.ch5
+#         ${PROJECT_NAME}.ch7
+#         ${PROJECT_NAME}.common
+#         ${third_party_libs}
+#         )
 
-add_executable(run_gen_simu_data
-        test/run_gen_simu_data.cc
-        )
+# add_executable(run_gen_simu_data
+#         test/run_gen_simu_data.cc
+#         )
 
-target_link_libraries(run_gen_simu_data
-        ${PROJECT_NAME}.ch5
-        ${PROJECT_NAME}.ch7
-        ${PROJECT_NAME}.common
-        ${third_party_libs}
-        )
+# target_link_libraries(run_gen_simu_data
+#         ${PROJECT_NAME}.ch5
+#         ${PROJECT_NAME}.ch7
+#         ${PROJECT_NAME}.common
+#         ${third_party_libs}
+#         )

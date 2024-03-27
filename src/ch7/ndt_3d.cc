@@ -140,28 +140,52 @@ bool Ndt3d::AlignNdt(SE3& init_pose) {
         double total_res = 0;
         int effective_num = 0;
 
-        Mat6d H = Mat6d::Zero();
-        Vec6d err = Vec6d::Zero();
+        // Mat6d H = Mat6d::Zero();
+        // Vec6d err = Vec6d::Zero();
 
-        for (int idx = 0; idx < effect_pts.size(); ++idx) {
-            if (!effect_pts[idx]) {
-                continue;
-            }
+        // for (int idx = 0; idx < effect_pts.size(); ++idx) {
+        //     if (!effect_pts[idx]) {
+        //         continue;
+        //     }
 
-            total_res += errors[idx].transpose() * infos[idx] * errors[idx];
-            // chi2.emplace_back(errors[idx].transpose() * infos[idx] * errors[idx]);
-            effective_num++;
+        //     total_res += errors[idx].transpose() * infos[idx] * errors[idx];
+        //     // chi2.emplace_back(errors[idx].transpose() * infos[idx] * errors[idx]);
+        //     effective_num++;
 
-            H += jacobians[idx].transpose() * infos[idx] * jacobians[idx];
-            err += -jacobians[idx].transpose() * infos[idx] * errors[idx];
-        }
+        //     H += jacobians[idx].transpose() * infos[idx] * jacobians[idx];
+        //     err += -jacobians[idx].transpose() * infos[idx] * errors[idx];
+        // }
+
+        // if (effective_num < options_.min_effective_pts_) {
+        //     LOG(WARNING) << "effective num too small: " << effective_num;
+        //     return false;
+        // }
+
+        // Vec6d dx = H.inverse() * err;
+        std::vector<int> idx(effect_pts.size());
+        std::for_each(idx.begin(), idx.end(), [iidx=0](int& i) mutable { i = iidx++; });
+        auto H_and_err = std::transform_reduce(std::execution::par_unseq,
+            idx.begin(), idx.end(), std::pair<Mat6d, Vec6d>(Mat6d::Zero(), Vec6d::Zero()),
+            [](const std::pair<Mat6d, Vec6d>& a, const std::pair<Mat6d, Vec6d>& b) -> std::pair<Mat6d, Vec6d> {
+                return std::pair<Mat6d, Vec6d>(a.first + b.first, a.second + b.second);
+            },
+            [&jacobians,&infos, &errors, &effect_pts, &total_res, &effective_num](int idx) -> std::pair<Mat6d, Vec6d> {
+                if (!effect_pts[idx]) {
+                    return std::pair<Mat6d, Vec6d>(Mat6d::Zero(), Vec6d::Zero());
+                } else {
+                    total_res += errors[idx].transpose() * infos[idx] * errors[idx];
+                    effective_num++;
+                    return std::pair<Mat6d, Vec6d>(jacobians[idx].transpose() * infos[idx] * jacobians[idx],
+                                                -jacobians[idx].transpose() * infos[idx] * errors[idx]);
+                }
+            });
 
         if (effective_num < options_.min_effective_pts_) {
             LOG(WARNING) << "effective num too small: " << effective_num;
             return false;
         }
 
-        Vec6d dx = H.inverse() * err;
+        Vec6d dx = H_and_err.first.inverse() * H_and_err.second;
         pose.so3() = pose.so3() * SO3::exp(dx.head<3>());
         pose.translation() += dx.tail<3>();
 

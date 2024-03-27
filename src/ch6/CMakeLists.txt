@@ -8,6 +8,11 @@ add_library(${PROJECT_NAME}.ch6
         multi_resolution_likelihood_field.cc
         loop_closing.cc
         frame.cc
+
+
+        loosely_lio2d/loosely_lio.cc
+        loosely_lio2d/measure_sync.cc
+        # loosely_lio2d/test_loosely_lio2d.cc
         )
 
 target_link_libraries(${PROJECT_NAME}.ch6
@@ -91,3 +96,28 @@ target_link_libraries(test_mr_matching
         ${PCL_LIBRARIES}
         ${g2o_libs}
         )
+
+# add_subdirectory(loosely_lio2d)
+add_executable(test_loosely_lio2d
+        loosely_lio2d/test_loosely_lio2d.cc
+        loosely_lio2d/measure_sync.cc
+        loosely_lio2d/loosely_lio.cc
+        )
+
+target_link_libraries(test_loosely_lio2d
+        ${PROJECT_NAME}.ch6
+        ${PROJECT_NAME}.common
+        ${third_party_libs}
+        glog gflags
+)
+# add_executable(pointcloud_clustering
+# pointcloud_clustering.cc
+#         )
+
+# target_link_libraries(pointcloud_clustering
+#         ${PROJECT_NAME}.ch6
+#         ${OpenCV_LIBS}
+#         ${catkin_LIBRARIES}
+#         glog gflags
+#         ${PCL_LIBRARIES}
+#         )

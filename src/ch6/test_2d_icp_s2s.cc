@@ -41,9 +41,25 @@ int main(int argc, char** argv) {
                              SE2 pose;
                              if (fLS::FLAGS_method == "point2point") {
                                  icp.AlignGaussNewton(pose);
-                             } else if (fLS::FLAGS_method == "point2plane") {
+                             } else if (fLS::FLAGS_method == "point2line") {
                                  icp.AlignGaussNewtonPoint2Plane(pose);
+                            //  } else if (fLS::FLAGS_method == "point2point_g2o") {
+                            //      LOG(INFO) << "icp.AlignG2OP2P(pose): ";
+                            //      icp.AlignG2OP2P(pose);     // 【新增】
+                             } else if (fLS::FLAGS_method == "point2point_g2o") {
+                                 LOG(INFO) << "icp.AlignG2OP2P_2(pose): ";
+                                 icp.AlignG2O(pose);   // 【新增】
                              }
+                            //  } else if (fLS::FLAGS_method == "point2point_g2o_3") {
+                            //      LOG(INFO) << "icp.AlignG2OP2P_3(pose): ";
+                            //      icp.AlignG2OP2P_3(pose);   // 【新增】
+                            //  } else if (fLS::FLAGS_method == "point2line_g2o") {
+                            //      LOG(INFO) << "icp.AlignG2OP2L(pose): ";
+                            //      icp.AlignG2OP2L(pose);     // 【新增】
+                            //  } else if (fLS::FLAGS_method == "point2line_g2o_2") {
+                            //      LOG(INFO) << "icp.AlignG2OP2L_2(pose): ";
+                            //      icp.AlignG2OP2L_2(pose);   // 【新增】
+                            //  }
 
                              cv::Mat image;
                              sad::Visualize2DScan(last_scan, SE2(), image, Vec3b(255, 0, 0));    // target是蓝的

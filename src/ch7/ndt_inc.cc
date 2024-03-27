@@ -92,6 +92,12 @@ void IncNdt3d::UpdateVoxel(VoxelData& v) {
         v.pts_.clear();
 
         // check info
+        //奇异值分解，"check info"这一步是在计算和更新点云数据的信息矩阵。这个过程包括以下步骤：
+// 1. 对协方差矩阵进行奇异值分解（SVD），得到奇异值和相应的U和V矩阵。
+// 2. 检查奇异值（lambda），如果某个奇异值太小（小于最大奇异值的1e-3倍），则将其设置为最大奇异值的1e-3倍。这是为了防止数值不稳定。
+// 3. 计算奇异值的倒数，得到一个对角矩阵。
+// 4. 使用V矩阵、对角矩阵和U矩阵的转置计算信息矩阵。
+// 信息矩阵是协方差矩阵的逆矩阵，它描述了数据的不确定性。在这个上下文中，信息矩阵用于表示点云数据的空间分布和方向。
         Eigen::JacobiSVD svd(v.sigma_, Eigen::ComputeFullU | Eigen::ComputeFullV);
         Vec3d lambda = svd.singularValues();
         if (lambda[1] < lambda[0] * 1e-3) {

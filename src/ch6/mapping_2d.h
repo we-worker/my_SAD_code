@@ -31,6 +31,8 @@ class Mapping2D {
     /// 暂时没用到
     bool ProcessScan(MultiScan2d::Ptr scan);
 
+    bool ProcessScan(Scan2d::Ptr scan,SE2 motion_guess_);
+
     /**
      * 显示全局地图
      * @param max_size 全局地图最大长宽

@@ -95,6 +95,73 @@ bool Mapping2D::ProcessScan(Scan2d::Ptr scan) {
     return true;
 }
 
+bool Mapping2D::ProcessScan(Scan2d::Ptr scan,SE2 motion_guess_){
+    current_frame_ = std::make_shared<Frame>(scan);
+    current_frame_->id_ = frame_id_++;
+
+    if (last_frame_) {
+        // set pose from last frame
+        // current_frame_->pose_ = last_frame_->pose_;
+        current_frame_->pose_ = last_frame_->pose_ * motion_guess_;
+        current_frame_->pose_submap_ = last_frame_->pose_submap_;
+    }
+
+    // 利用scan matching来匹配地图
+    if (!first_scan_) {
+        // 第一帧无法匹配，直接加入到occupancy map
+        current_submap_->MatchScan(current_frame_);
+    }
+
+    // current_submap_->AddScanInOccupancyMap(current_frame_);
+    first_scan_ = false;
+    bool is_kf = IsKeyFrame();
+
+    if (is_kf) {
+        AddKeyFrame();
+        current_submap_->AddScanInOccupancyMap(current_frame_);
+
+        // 处理回环检测
+        if (loop_closing_) {
+            loop_closing_->AddNewFrame(current_frame_);
+        }
+
+        if (current_submap_->HasOutsidePoints() || (current_submap_->NumFrames()) > 50) {
+            /// 走出了submap或者单个submap中的关键帧较多
+            ExpandSubmap();
+        }
+    }
+
+    /// 可视化输出
+    auto occu_image = current_submap_->GetOccuMap().GetOccupancyGridBlackWhite();
+    Visualize2DScan(current_frame_->scan_, current_frame_->pose_, occu_image, Vec3b(0, 0, 255), 1000, 20.0,
+                    current_submap_->GetPose());
+    cv::putText(occu_image, "submap " + std::to_string(current_submap_->GetId()), cv::Point2f(20, 20),
+                cv::FONT_HERSHEY_COMPLEX, 0.5, cv::Scalar(0, 255, 0));
+    cv::putText(occu_image, "keyframes " + std::to_string(current_submap_->NumFrames()), cv::Point2f(20, 50),
+                cv::FONT_HERSHEY_COMPLEX, 0.5, cv::Scalar(0, 255, 0));
+    cv::imshow("occupancy map", occu_image);
+
+    auto field_image = current_submap_->GetLikelihood().GetFieldImage();
+    Visualize2DScan(current_frame_->scan_, current_frame_->pose_, field_image, Vec3b(0, 0, 255), 1000, 20.0,
+                    current_submap_->GetPose());
+    cv::imshow("likelihood", field_image);
+
+    /// global map
+    if (is_kf) {
+        cv::imshow("global map", ShowGlobalMap());
+    }
+
+    cv::waitKey(10);
+
+    // if (last_frame_) {
+    //     motion_guess_ = last_frame_->pose_.inverse() * current_frame_->pose_;
+    // }
+
+    last_frame_ = current_frame_;
+
+    return true;
+}
+
 bool Mapping2D::IsKeyFrame() {
     if (last_keyframe_ == nullptr) {
         return true;

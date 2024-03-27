@@ -31,7 +31,7 @@ class FeatureExtraction {
      * @param pc_out_edge   输出角点的点云
      * @param pc_out_surf   输出平面的点云
      */
-    void Extract(FullCloudPtr pc_in, CloudPtr pc_out_edge, CloudPtr pc_out_surf);
+    void Extract(FullCloudPtr pc_in, CloudPtr pc_out_edge, CloudPtr pc_out_surf,CloudPtr pc_out_ground);
 
     /**
      * 对单独一段区域提取角点和面点
@@ -44,6 +44,8 @@ class FeatureExtraction {
                            CloudPtr& pc_out_surf);
 
    private:
+
+    void groundRemoval(std::vector<CloudPtr> &scans_in_each_line,int num_scans,CloudPtr &pc_out_ground);
 };
 
 }  // namespace sad
