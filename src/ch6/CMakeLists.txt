@@ -10,7 +10,7 @@ add_library(${PROJECT_NAME}.ch6
         frame.cc
 
 
-        loosely_lio2d/loosely_lio.cc
+        # loosely_lio2d/loosely_lio.cc
         loosely_lio2d/measure_sync.cc
         # loosely_lio2d/test_loosely_lio2d.cc
         )

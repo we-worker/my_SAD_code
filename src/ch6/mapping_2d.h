@@ -40,6 +40,7 @@ class Mapping2D {
      */
     cv::Mat ShowGlobalMap(int max_size = 500);
 
+    std::shared_ptr<Frame> current_frame_ = nullptr;
    private:
     /// 判定当前帧是否为关键帧
     bool IsKeyFrame();
@@ -56,7 +57,6 @@ class Mapping2D {
     size_t submap_id_ = 0;
 
     bool first_scan_ = true;
-    std::shared_ptr<Frame> current_frame_ = nullptr;
     std::shared_ptr<Frame> last_frame_ = nullptr;
     SE2 motion_guess_;
     std::shared_ptr<Frame> last_keyframe_ = nullptr;

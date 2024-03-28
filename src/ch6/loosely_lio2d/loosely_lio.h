@@ -62,7 +62,7 @@ class LooselyLIO {
     void Undistort();
 
     /// 执行一次配准和观测
-    void Align(const MeasureGroup &meas);
+    void Align();
 
    private:
     /// modules

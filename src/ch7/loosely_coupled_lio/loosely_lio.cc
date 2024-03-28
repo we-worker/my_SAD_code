@@ -103,7 +103,7 @@ void LooselyLIO::Undistort() {
     auto cloud = measures_.lidar_;
     auto imu_state = eskf_.GetNominalState();  // 最后时刻的状态
     SE3 T_end = SE3(imu_state.R_, imu_state.p_);
-
+    
     if (options_.save_motion_undistortion_pcd_) {
         sad::SaveCloudToFile("./data/ch7/before_undist.pcd", *cloud);
     }
@@ -116,7 +116,7 @@ void LooselyLIO::Undistort() {
         // 根据pt.time查找时间，pt.time是该点打到的时间与雷达开始时间之差，单位为毫秒
         math::PoseInterp<NavStated>(
             measures_.lidar_begin_time_ + pt.time * 1e-3, imu_states_, [](const NavStated &s) { return s.timestamp_; },
-            [](const NavStated &s) { return s.GetSE3(); }, Ti, match);
+            [](const NavStated &s) { return s.GetSE3(); }, Ti, match);  
 
         Vec3d pi = ToVec3d(pt);
         Vec3d p_compensate = TIL_.inverse() * T_end.inverse() * Ti * TIL_ * pi;
