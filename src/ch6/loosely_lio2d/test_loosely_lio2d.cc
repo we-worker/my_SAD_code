@@ -15,7 +15,7 @@
 #include "common/timer/timer.h"
 
 
-DEFINE_string(bag_path, "./dataset/sad/2dmapping/31.bag", "数据包路径");
+DEFINE_string(bag_path, "./dataset/myself/31.bag", "数据包路径");
 DEFINE_bool(with_loop_closing, false, "是否使用回环检测");
 
 /// 测试2D lidar SLAM

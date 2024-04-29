@@ -34,6 +34,7 @@ find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 # g2o 使用thirdparty中的
+#${CSPARSE_LIBRARY}处理稀疏矩阵的包
 include_directories(${PROJECT_SOURCE_DIR}/thirdparty/g2o/)
 set(g2o_libs
         ${PROJECT_SOURCE_DIR}/thirdparty/g2o/lib/libg2o_stuff.so
